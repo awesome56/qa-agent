@@ -1,8 +1,8 @@
 ---
-name: main
+name: CI
 "on": push
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hello main"
+      - run: echo "hello ci push"
