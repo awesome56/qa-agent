@@ -1,6 +1,7 @@
 ---
 name: CI
 "on": [push, workflow_dispatch]
+permissions: write-all
 jobs:
   test:
     runs-on: ubuntu-latest
