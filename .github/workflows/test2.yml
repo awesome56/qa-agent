@@ -1,7 +1,8 @@
+---
 name: test2
-on: workflow_dispatch
+"on": workflow_dispatch
 jobs:
   hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hello test2 dispatch"
+      - run: echo "hello test2"
