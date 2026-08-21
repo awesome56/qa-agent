@@ -4,7 +4,10 @@ on:
   push:
     branches: [main, master]
     paths:
-      - "qa-agent/**"
+      - "app/**"
+      - "playwright/**"
+      - "k6/**"
+      - "Dockerfile*"
       - ".github/workflows/build-and-push.yml"
   workflow_dispatch:
 
@@ -15,9 +18,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: qa-agent
     steps:
       - uses: actions/checkout@v4
 
@@ -44,14 +44,14 @@ jobs:
       - name: Build and push closed image
         uses: docker/build-push-action@v5
         with:
-          context: qa-agent
-          file: qa-agent/Dockerfile.closed
+          context: .
+          file: ./Dockerfile.closed
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # no source exposed — image is the artifact
+          # closed build — no .py source in image, like opencode v2 binary
 
       - name: Verify no .py in image
         run: |

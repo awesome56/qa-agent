@@ -2,14 +2,11 @@ name: test
 
 on:
   pull_request:
-    paths: [ "qa-agent/**" ]
+    paths: [ "app/**", "playwright/**", "k6/**" ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: qa-agent
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
