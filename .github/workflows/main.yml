@@ -1,12 +1,7 @@
----
-name: ci
-"on":
-  push:
-    branches: [main]
-  workflow_dispatch:
+name: main
+on: workflow_dispatch
 jobs:
   hello:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "hello ci fixed"
+      - run: echo "hello main dispatch"

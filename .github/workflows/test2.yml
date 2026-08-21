@@ -1,10 +1,7 @@
 name: test2
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+on: workflow_dispatch
 jobs:
   hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hello test2"
+      - run: echo "hello test2 dispatch"
