@@ -1,5 +1,6 @@
+---
 name: ci
-on:
+"on":
   push:
     branches: [main]
   workflow_dispatch:
@@ -8,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "hello ci"
+      - run: echo "hello ci fixed"
