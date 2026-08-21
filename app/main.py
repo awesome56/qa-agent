@@ -6,7 +6,7 @@ import asyncio
 from datetime import date
 from contextlib import asynccontextmanager
 
-from app.routers import health, tests, reports, webhook, mcp
+from app.routers import health, tests, reports, webhook, mcp, intake
 from app.workers import queue
 from app.services.reporter import build_daily_report
 from app.config import REPORTS, STORAGE
@@ -50,6 +50,7 @@ app.include_router(reports.router)
 app.include_router(webhook.router)
 app.include_router(mcp.router)
 app.include_router(mcp.agent_router)
+app.include_router(intake.router)
 
 # serve storage (videos/reports) read-only
 if STORAGE.exists():
