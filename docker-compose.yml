@@ -1,0 +1,37 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - ./storage:/app/storage
+      - ./playwright:/app/playwright
+      - ./k6:/app/k6
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    volumes: [redis_data:/data]
+
+  # optional — uncomment if you want persistent RAG/graph
+  # qdrant:
+  #   image: qdrant/qdrant:v1.9.4
+  #   ports: ["6333:6333"]
+  #   volumes: [qdrant_data:/qdrant/storage]
+  # neo4j:
+  #   image: neo4j:5.20
+  #   environment:
+  #     NEO4J_AUTH: neo4j/qa-agent-pass
+  #   ports: ["7687:7687", "7474:7474"]
+  #   volumes: [neo4j_data:/data]
+
+volumes:
+  redis_data:
+  # qdrant_data:
+  # neo4j_data:

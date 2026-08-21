@@ -1,0 +1,33 @@
+qa.awesometech.com.ng {
+    # Automatic HTTPS via Let's Encrypt — zero config, like opencode v2 deploy
+    # Lenovo must have ports 80,443 open and DNS A record -> Lenovo public IP
+
+    reverse_proxy api:8000 {
+        # stream SSE properly
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Real-IP {remote}
+
+        # SSE / streaming timeouts
+        transport http {
+            dial_timeout 5s
+            response_header_timeout 300s
+        }
+    }
+
+    # security headers
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    log {
+        output file /data/access.log
+    }
+}
+
+# optional: also serve www
+www.qa.awesometech.com.ng {
+    redir https://qa.awesometech.com.ng{uri}
+}

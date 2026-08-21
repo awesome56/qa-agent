@@ -1,0 +1,12 @@
+.git
+.gitignore
+README.md
+storage
+test
+.venv
+__pycache__
+*.pyc
+.env
+.env.example
+.github
+playwright/.cache

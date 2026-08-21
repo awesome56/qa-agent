@@ -1,0 +1,31 @@
+[project]
+name = "qa-agent"
+version = "0.1.0"
+description = "Private QA stress/load + screen record daemon with RAG/graph and SSE"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi==0.110.2",
+  "uvicorn[standard]==0.29.0",
+  "sse-starlette==1.8.2",
+  "pydantic==2.7.1",
+  "pydantic-settings==2.3.4",
+  "httpx==0.27.0",
+  "redis==5.0.4",
+  "celery==5.3.6",
+  "playwright==1.44.0",
+  "jinja2==3.1.4",
+  "python-multipart==0.0.9",
+  "qdrant-client==1.9.1",
+  "neo4j==5.20.0",
+  "openai==1.35.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.2.2", "ruff==0.4.8"]
+
+[tool.ruff]
+line-length = 100
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

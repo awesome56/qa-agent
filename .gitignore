@@ -1,0 +1,33 @@
+# python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+.env.prod
+*.egg-info/
+
+# storage
+storage/videos/
+storage/reports/
+storage/traces/
+storage/k6-results/
+storage/db/
+
+# playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# k6
+k6/bin/
+
+# os
+.DS_Store
+.idea/
+
+# build
+dist/
+build/
+*.so

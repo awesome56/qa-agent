@@ -1,0 +1,67 @@
+# Prod / Lenovo — qa.awesometech.com.ng
+# Closed image from GHCR private, no source, behind Caddy (auto HTTPS)
+# Usage on Lenovo:
+#   cp .env.example .env.prod && edit DOMAIN + secrets
+#   docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d
+#   caddy handles Let's Encrypt automatically if DNS A record points to Lenovo IP and 80/443 open
+
+services:
+  api:
+    image: ghcr.io/awesome56/qa-agent:${TAG:-closed}
+    # no ports exposed directly — only via caddy
+    expose:
+      - "8000"
+    env_file: .env.prod
+    volumes:
+      - ./storage:/app/storage
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health', timeout=3).raise_for_status()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    volumes: [redis_data:/data]
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # http3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # optional — uncomment if you enable persistent RAG/graph (set QDRANT_URL etc in .env.prod)
+  # qdrant:
+  #   image: qdrant/qdrant:v1.9.4
+  #   volumes: [qdrant_data:/qdrant/storage]
+  #   restart: unless-stopped
+  # neo4j:
+  #   image: neo4j:5.20
+  #   environment:
+  #     NEO4J_AUTH: neo4j/${NEO4J_PASSWORD}
+  #   volumes: [neo4j_data:/data]
+  #   restart: unless-stopped
+
+volumes:
+  redis_data:
+  caddy_data:
+  caddy_config:
+  # qdrant_data:
+  # neo4j_data:

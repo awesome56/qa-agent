@@ -1,0 +1,50 @@
+# Closed build — like opencode v2: no .py source shipped, only .pyc + distroless runtime
+# Stage 1: build + compile
+FROM mcr.microsoft.com/playwright/python:v1.44.0-jammy AS builder
+
+WORKDIR /app
+
+# k6 binary — copy later
+RUN apt-get update && apt-get install -y ca-certificates gnupg curl \
+  && curl -fsSL https://dl.k6.io/key.gpg | gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | tee /etc/apt/sources.list.d/k6.list \
+  && apt-get update && apt-get install -y k6 && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --target=/app/deps -r requirements.txt
+
+COPY app app
+COPY playwright playwright
+COPY k6 k6
+
+# compile to .pyc and strip source + comments, remove .py
+RUN python -m compileall -b -o 2 app \
+  && find app -type f -name "*.py" -delete \
+  && find app -type f -name "*.pyc" -o -name "*.pyo" | head \
+  && echo "compiled, .py removed"
+
+# Stage 2: runtime — minimal, non-root, no shell history, no source
+FROM mcr.microsoft.com/playwright/python:v1.44.0-jammy AS runtime
+
+WORKDIR /app
+
+# copy k6
+COPY --from=builder /usr/bin/k6 /usr/bin/k6
+
+# copy compiled app + deps
+COPY --from=builder /app/deps /usr/local/lib/python3.11/site-packages
+COPY --from=builder /app/app app
+COPY --from=builder /app/playwright playwright
+COPY --from=builder /app/k6 k6
+
+# create non-root user
+RUN useradd -m -u 1001 qa && mkdir -p /app/storage && chown -R qa:qa /app
+USER qa
+
+ENV PYTHONUNBUFFERED=1 PORT=8000 STORAGE_DIR=/app/storage PYTHONOPTIMIZE=2 PYTHONDONTWRITEBYTECODE=0
+EXPOSE 8000
+
+# healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import httpx; httpx.get('http://localhost:8000/health', timeout=3).raise_for_status()" || exit 1
+
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
