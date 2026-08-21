@@ -1,11 +1,12 @@
 ---
-name: test2
+name: build
 "on":
   push:
     branches: [main]
   workflow_dispatch:
 jobs:
-  hello:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hello test2"
+      - uses: actions/checkout@v4
+      - run: echo "hello build"
