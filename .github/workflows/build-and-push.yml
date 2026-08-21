@@ -1,6 +1,6 @@
 name: build-closed-and-push-ghcr
 
-on:
+"on":
   push:
     branches: [main, master]
     paths:

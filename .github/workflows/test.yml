@@ -1,6 +1,6 @@
 name: test
 
-on:
+"on":
   pull_request:
     paths: [ "app/**", "playwright/**", "k6/**" ]
 
