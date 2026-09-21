@@ -31,3 +31,15 @@ k6/bin/
 dist/
 build/
 *.so
+
+# --- Secrets and local environment files must never be committed ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+secrets.json
+auth.json
+.trae/mcp.json
