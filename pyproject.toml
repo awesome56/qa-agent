@@ -18,6 +18,8 @@ dependencies = [
   "qdrant-client==1.9.1",
   "neo4j==5.20.0",
   "openai==1.35.3",
+  "boto3==1.43.77",
+  "fpdf2==2.8.8",
 ]
 
 [project.optional-dependencies]

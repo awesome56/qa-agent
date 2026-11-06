@@ -46,12 +46,13 @@ Build JSON and `POST https://qa.awesometech.com.ng/api/v1/test/run` (or fallback
   "target_url":"https://hrms.awesometech.com.ng/leave",
   "scenario":"cannot approve expired leave",
   "scope":"edge_cases",
+  "model":"muse-spark-1.2",
   "vus":50,"duration":"30s",
   "auth":{"login_url":"https://hrms.awesometech.com.ng/login","username":"...","password":"...","admin_username":"...","admin_password":"...","permission_feature":"leave_approval"},
   "record_video":true,"highlight_buttons":true
 }
 ```
-Use `auth.password` as `SecretStr`. Never echo password in logs.
+Use `auth.password` as `SecretStr`. Never echo password in logs. For `model`, use the current `opencode` model the user selected in `Awesome_App` (e.g. `muse-spark-1.2`, `gpt-4o`, `claude-3`) — pass `model` from the session's `model` or default to `muse-spark-1.2` if not set, so changing it in `Awesome_App` instantly changes `qa-agent` without touching `~/qa-agent/.env`.
 
 ## Step 4 — Stream & handle asks
 Stream `GET https://qa.awesometech.com.ng/api/v1/test/{id}/stream` (SSE). If event `need_auth` or `need_admin`, ask user for missing credentials and re-POST with same `target_url` + new `auth`.

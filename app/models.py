@@ -36,9 +36,9 @@ class AuthConfig(BaseModel):
     admin_username: Optional[str] = None
     admin_password: Optional[SecretStr] = None
     permission_feature: Optional[str] = Field(default=None, description="e.g. leave_approval, hrms:manage_staff")
-    # selectors override if hrms form differs
-    username_selector: str = Field(default="input[type='email'], input[name='email'], input[name='username']")
-    password_selector: str = Field(default="input[type='password']")
+    # selectors override if hrms form differs — include hrms name field
+    username_selector: str = Field(default="input[name='name'], #name, input[name='username'], input[type='email'], input[name='email']")
+    password_selector: str = Field(default="input[name='password'], #password, input[type='password']")
     submit_selector: str = Field(default="button[type='submit'], button:has-text('Login'), button:has-text('Sign in')")
 
 class TestRequest(BaseModel):
@@ -46,6 +46,7 @@ class TestRequest(BaseModel):
     target_url: str = Field(description="URL to test, e.g. https://hrms.awesometech.com.ng/leave")
     scenario: str = Field(default="smoke", description="free text: bugfix/feature description")
     scope: TestScope = Field(default=TestScope.feature, description="feature | test_cases | edge_cases | load | stress | all")
+    model: Optional[str] = Field(default=None, description="LLM model to use, e.g. muse-spark-1.2, gpt-4o-mini, claude-3. Respects Awesome_App picker, defaults to muse-spark-1.2")
     vus: int = Field(default=10, ge=1, le=5000, description="virtual users for k6 (used if scope includes load/stress)")
     duration: str = Field(default="30s", description="k6 duration e.g. 30s, 2m")
     record_video: bool = True

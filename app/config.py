@@ -20,6 +20,18 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     llm_model: str = "gpt-4o-mini"
     github_webhook_secret: str = "change-me-too"
+    # Default HRMS test accounts for hrms-new (used when auto-accept and no auth provided)
+    hrms_test_username: str = "00551"
+    hrms_test_password: str = "123456"
+    hrms_admin_username: str = "virdi"
+    hrms_admin_password: str = "123456"
+    # Cloudflare R2 — same account as aperte/examco
+    r2_account_id: str = "882aa99364ba4056ecc25732edecd7f8"
+    r2_access_key_id: str = "9c3d1b874701db07cbdf294f6ce127b6"
+    r2_secret_access_key: str = "25b6a3441cb2037845c3c4b2b09c750de5a96ab65992a0ed58f60c256b4f5757"
+    r2_bucket_name: str = "qa-reports"
+    r2_endpoint_url: str = "https://882aa99364ba4056ecc25732edecd7f8.r2.cloudflarestorage.com"
+    r2_public_base_url: str = "https://pub-qa-reports.r2.dev"  # set custom domain if you add one
 
     class Config:
         env_file = ".env"

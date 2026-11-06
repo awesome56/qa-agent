@@ -163,8 +163,8 @@ async def run_playwright_recording(
             admin_user = auth.get("admin_username")
             admin_pass = await _extract_secret(auth.get("admin_password")) if auth.get("admin_password") else None
             perm_feature = auth.get("permission_feature")
-            u_sel = auth.get("username_selector") or "input[type='email'], input[name='email'], input[name='username']"
-            p_sel = auth.get("password_selector") or "input[type='password']"
+            u_sel = auth.get("username_selector") or "input[name='name'], #name, input[name='username'], input[type='email'], input[name='email']"
+            p_sel = auth.get("password_selector") or "input[name='password'], #password, input[type='password']"
             s_sel = auth.get("submit_selector") or "button[type='submit'], button:has-text('Login'), button:has-text('Sign in')"
 
             # if auth provided, login first
